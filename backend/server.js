@@ -1,9 +1,10 @@
-const express = require('express')
-const dotenv = require('dotenv');
-const colors = require('colors')
-const connectDB = require('./config/db')
+import express from 'express'
+import dotenv from 'dotenv'
+import colors from 'colors'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js'
+import connectDB from './config/db.js'
 
-const productRoutes = require('./routes/productRoutes')
+import productRoutes from './routes/productRoutes.js'
 
 
 dotenv.config()
@@ -18,6 +19,11 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/products', productRoutes)
+
+app.use(notFound)
+
+app.use(errorHandler)
+
 
 
 
