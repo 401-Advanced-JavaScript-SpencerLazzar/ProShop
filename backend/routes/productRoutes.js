@@ -1,31 +1,36 @@
-const express = require('express');
-const asyncHandler = require('express-async-handler');
+
+import express from 'express'
+import asyncHandler from 'express-async-handler'
 const router = express.Router()
-const Product = require('../models/productModel')
+import Product from '../models/productModel.js'
 
+// @desc    Fetch all products
+// @route   GET /api/products
+// @access  Public
+router.get(
+  '/',
+  asyncHandler(async (req, res) => {
+    const products = await Product.find({})
 
-// @desc Fetch all products
-// @route GET /api/products
-// @access Public
+    res.json(products)
+  })
+)
 
-router.get('/', asyncHandler(async (req, res) => {
-  const products = await Product.find({})
+// @desc    Fetch single product
+// @route   GET /api/products/:id
+// @access  Public
+router.get(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id)
 
-  res.json(products)
-}))
+    if (product) {
+      res.json(product)
+    } else {
+      res.status(404)
+      throw new Error('Product not found')
+    }
+  })
+)
 
-// @desc Fetch single product
-// @route GET /api/products/:id
-// @access Public
-router.get('/:id', asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id)
-
-  if (product) {
-    res.json(product)
-  } else {
-    res.status(404).json({ massage: 'Product not found ' })
-  }
-
-}))
-
-module.exports = router
+export default router
